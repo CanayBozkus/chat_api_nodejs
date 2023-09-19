@@ -20,8 +20,8 @@ exports.login = (req, res) => {
 
     const authToken = jwt.sign(
         {
+            id: 1,
             email,
-            password,
             date: Date.now()
         },
         process.env.JWT_TOKEN
@@ -33,8 +33,8 @@ exports.login = (req, res) => {
         maxAge: 36000
     }
 
-    //TODO: change 'login' key to a secret key
-    res.cookie('login', authToken, cookieConfig)
+    //TODO: change 'authKey' key to a secret key
+    res.cookie('authKey', authToken, cookieConfig)
 
     res.json({success: true})
 }
