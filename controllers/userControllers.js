@@ -5,12 +5,6 @@ const bcrypt = require('bcrypt');
 const UserSchema = require('../models/userModel')
 
 exports.login = async (req, res) => {
-    const validationErrors = validationResult(req)
-
-    if(!validationErrors.isEmpty()){
-        return res.json({success: false, msg: validationErrors.array()})
-    }
-
     const email = req.body.email
     const password = req.body.password
 
@@ -55,12 +49,6 @@ exports.login = async (req, res) => {
 }
 
 exports.register = async (req, res) => {
-    const validationErrors = validationResult(req)
-
-    if(!validationErrors.isEmpty()){
-        return res.json({success: false, msg: validationErrors.array()})
-    }
-
     const email = req.body.email
     const password = req.body.password
     const name = req.body.name

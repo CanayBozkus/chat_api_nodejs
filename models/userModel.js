@@ -17,7 +17,7 @@ const UserSchema = new Schema({
     },
     isSupportAgent: {
         type: Boolean,
-        default: false
+        default: false //Change this value from admin panel, TODO: Admin panel
     }
 }, { timestamps: { createdAt: 'createdAt' } })
 
