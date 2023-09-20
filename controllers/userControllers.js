@@ -1,5 +1,8 @@
 const { validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt');
+
+const UserSchema = require('../models/userModel')
 
 exports.login = (req, res) => {
     const validationErrors = validationResult(req)
@@ -37,4 +40,45 @@ exports.login = (req, res) => {
     res.cookie('authKey', authToken, cookieConfig)
 
     res.json({success: true})
+}
+
+exports.register = async (req, res) => {
+    const validationErrors = validationResult(req)
+
+    if(!validationErrors.isEmpty()){
+        return res.json({success: false, msg: validationErrors.array()})
+    }
+
+    const email = req.body.email
+    const password = req.body.password
+    const name = req.body.name
+
+    try {
+        const existUser = await UserSchema.findOne({email: email})
+
+        if(existUser){
+            return res.status(400).json({success: false, msg: "Email is already used"})
+        }
+    }
+
+    catch (err){
+        return res.status(500).json({success: false, msg: "Please try again later"})
+    }
+
+    const passwordHash = bcrypt.hashSync(password, process.env.BCRYPT_SALT)
+
+    const user = new UserSchema({
+        name: name,
+        email: email,
+        password: passwordHash
+    })
+
+    try {
+        const res = await user.save()
+        return res.json({success: true})
+    }
+
+    catch (e){
+        return res.status(500).json({success: false, msg: "Please try again later"})
+    }
 }
