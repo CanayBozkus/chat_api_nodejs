@@ -4,7 +4,7 @@ const bcrypt = require('bcrypt');
 
 const UserSchema = require('../models/userModel')
 
-exports.login = (req, res) => {
+exports.login = async (req, res) => {
     const validationErrors = validationResult(req)
 
     if(!validationErrors.isEmpty()){
@@ -14,8 +14,20 @@ exports.login = (req, res) => {
     const email = req.body.email
     const password = req.body.password
 
-    //TODO: Send request to your necessary APIs to check if credentials okay
-    const result = true
+    let user
+    try {
+        user = await UserSchema.findOne({email: email})
+    }
+
+    catch (err){
+        return res.status(500).json({success: false, msg: "Please try again later"})
+    }
+
+    if(!user){
+        return res.status(400).json({success: false, msg: "User does not exists"})
+    }
+
+    const result = await bcrypt.compareSync(password, user.password)
 
     if(!result){
         return res.json({success: false, msg: "Invalid credentials"})
@@ -23,7 +35,7 @@ exports.login = (req, res) => {
 
     const authToken = jwt.sign(
         {
-            id: 1,
+            id: user.id,
             email,
             date: Date.now()
         },
@@ -36,7 +48,7 @@ exports.login = (req, res) => {
         maxAge: 36000
     }
 
-    //TODO: change 'authKey' key to a secret key
+    //TODO (optional): change 'authKey' key to a secret key
     res.cookie('authKey', authToken, cookieConfig)
 
     res.json({success: true})
@@ -65,7 +77,7 @@ exports.register = async (req, res) => {
         return res.status(500).json({success: false, msg: "Please try again later"})
     }
 
-    const passwordHash = bcrypt.hashSync(password, process.env.BCRYPT_SALT)
+    const passwordHash = bcrypt.hashSync(password, Number(process.env.BCRYPT_SALT))
 
     const user = new UserSchema({
         name: name,
@@ -74,11 +86,17 @@ exports.register = async (req, res) => {
     })
 
     try {
-        const res = await user.save()
+        const result = await user.save()
+
+        if(Object.keys(result).length === 0){
+            return res.status(500).json({success: false, msg: "Please try again later"})
+        }
+
         return res.json({success: true})
     }
 
     catch (e){
+        console.log(e)
         return res.status(500).json({success: false, msg: "Please try again later"})
     }
 }
