@@ -14,6 +14,10 @@ const UserSchema = new Schema({
     password: {
         required: true,
         type: String
+    },
+    isSupportAgent: {
+        type: Boolean,
+        default: false
     }
 }, { timestamps: { createdAt: 'createdAt' } })
 
