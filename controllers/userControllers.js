@@ -39,13 +39,13 @@ exports.login = async (req, res) => {
     const cookieConfig = {
         httpOnly: true,
         //secure: true // for https requests,
-        maxAge: 36000
+        maxAge: 86400000
     }
 
     //TODO (optional): change 'authKey' key to a secret key
     res.cookie('authKey', authToken, cookieConfig)
 
-    res.json({success: true})
+    res.json({success: true, userId: user.id})
 }
 
 exports.register = async (req, res) => {
