@@ -10,10 +10,11 @@ const port = process.env.PORT ||  3000
 const MONGODB_URL = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/${process.env.MONGODB_DB}?authSource=admin`
 
 const socket = require('./socket')
+const redis = require('./redis')
+
 const userRoutes = require('./routes/userRoutes')
 const messageRoutes = require('./routes/messageRoutes')
-
-
+const {checkLogin} = require("./middlewares/userMiddlewares");
 
 app.use(cookieParser())
 app.use(express.json())
@@ -22,19 +23,18 @@ app.use(messageRoutes)
 
 mongoose
     .connect(MONGODB_URL)
-    .then(result => {
+    .then(async (result) => {
         console.log("Mongodb connected")
         const server = app.listen(port, () => {
             console.log("Server Started")
         })
 
+        await redis.init()
+
         socket.init(server)
+        socket.initListeners()
 
-        const io = socket.getIO()
 
-        io.on('connection', socket => {
-            console.log('connected', socket.id)
-        })
     })
     .catch(err => {
         console.log("Mongodb connection error", err)
