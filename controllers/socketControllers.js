@@ -4,9 +4,17 @@ const cookie = require('cookie');
 const logger = require('../logger')
 
 exports.socketConnectionHandler = async (socket) => {
-    const cookies = cookie.parse(socket.request.headers.cookie)
+    let cookies
+    try {
+        cookies = cookie.parse(socket.request.headers.cookie)
 
-    if(!cookies){
+        if(!cookies){
+            return socket.disconnect()
+        }
+    }
+
+    catch (e) {
+        console.log(e)
         return socket.disconnect()
     }
 

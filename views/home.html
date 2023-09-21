@@ -10,6 +10,7 @@
     <input type="text" id="rName" placeholder="name..." /><br>
     <input type="text" id="rEmail" placeholder="email..." /><br>
     <input type="password" id ="rPassword" placeholder="Password..." /><br>
+    <input type="checkbox" id="isAgent"> <label>Is support agent</label><br>
     <button id="register" onclick="register()">Register</button>
 </div>
 
@@ -71,11 +72,13 @@
         const name = document.getElementById('rName').value
         const email = document.getElementById('rEmail').value
         const password = document.getElementById('rPassword').value
+        const isSupportAgent = document.getElementById('isAgent').checked
 
         const data = {
             "email": email,
             "password": password,
-            "name": name
+            "name": name,
+            "isSupportAgent": isSupportAgent
         }
         await fetch('/api/register', {
             method: 'POST',
@@ -85,7 +88,7 @@
     }
 
     async function connect(){
-        socket = io.connect('http://127.0.0.1:3000', {reconnect: true, withCredentials: true})
+        socket = io.connect('http://127.0.0.1:3000', { withCredentials: true})
         socket.on('connect', function (socket) {
             console.log('Connected!');
         });

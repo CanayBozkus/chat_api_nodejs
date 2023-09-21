@@ -54,6 +54,7 @@ exports.register = async (req, res) => {
     const email = req.body.email
     const password = req.body.password
     const name = req.body.name
+    const isSupportAgent = req.body.isSupportAgent
 
     try {
         const existUser = await UserSchema.findOne({email: email})
@@ -73,7 +74,8 @@ exports.register = async (req, res) => {
     const user = new UserSchema({
         name: name,
         email: email,
-        password: passwordHash
+        password: passwordHash,
+        isSupportAgent: isSupportAgent
     })
 
     try {
