@@ -1,6 +1,7 @@
 const express = require('express')
 const dotenv = require('dotenv')
 const mongoose = require('mongoose')
+const cors = require('cors')
 const cookieParser = require("cookie-parser");
 const app = express()
 
@@ -16,8 +17,13 @@ const userRoutes = require('./routes/userRoutes')
 const messageRoutes = require('./routes/messageRoutes')
 const {checkLogin} = require("./middlewares/userMiddlewares");
 
+app.use(cors({
+    origin: "*",
+    credentials: true
+}))
 app.use(cookieParser())
 app.use(express.json())
+
 app.use(userRoutes)
 app.use(messageRoutes)
 

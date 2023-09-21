@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<div class="n_log_in">
+    <input type="text" id="email" placeholder="email..." /><br>
+    <input type="password" id ="password" placeholder="Password..." /><br>
+    <button id="Login_Register" onclick="login()">Login</button>
+</div>
+<br/>
+<div class="n_log_in">
+    <input type="text" id="rName" placeholder="name..." /><br>
+    <input type="text" id="rEmail" placeholder="email..." /><br>
+    <input type="password" id ="rPassword" placeholder="Password..." /><br>
+    <button id="register" onclick="register()">Register</button>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://cdn.socket.io/4.6.0/socket.io.min.js" integrity="sha384-c79GN5VsunZvi+Q/WObgk2in0CbZsHnjEqvFxC5DxHn9lTfNce2WW6h2pH6u/kF+" crossorigin="anonymous"></script>
+<script>
+
+    async function login(){
+        const email = document.getElementById('email').value
+        const password = document.getElementById('password').value
+
+        const data = {
+                "email": email,
+                "password": password,
+        }
+        await fetch('http:/localhost:3000/api/login', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+
+        await connect()
+    }
+
+    async function register() {
+        const name = document.getElementById('rName').value
+        const email = document.getElementById('rEmail').value
+        const password = document.getElementById('rPassword').value
+
+        const data = {
+            "email": email,
+            "password": password,
+            "name": name
+        }
+        await fetch('http:/localhost:3000/api/register', {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(data)
+        })
+    }
+
+    async function connect(){
+        const socket = io.connect('http://127.0.0.1:3000', {reconnect: true})
+        socket.on('connect', function (socket) {
+            console.log('Connected!');
+        });
+    }
+
+</script>
+
+</body>
+</html>
