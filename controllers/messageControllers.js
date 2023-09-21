@@ -1,4 +1,6 @@
 const MessageSchema = require('../models/messageModel')
+const redis = require('../redis')
+const socket = require('../socket')
 
 exports.sendMessage = async (req, res) => {
     const userId = req.userId
@@ -27,6 +29,25 @@ exports.sendMessage = async (req, res) => {
         if(Object.keys(result).length === 0){
             console.log("Failed to save message")
             return res.status(500).json({ success: false, msg: "Please try again later"})
+        }
+
+        try {
+            const io = socket.getIO()
+            const client = redis.getClient()
+
+            //socket id of receiver
+            const socketId = await client.get(to)
+
+            io.to(socketId).emit('message', {
+                message,
+                to,
+                from,
+                createdAt: message.createdAt
+            })
+        }
+
+        catch (err){
+            //message saved but whether socket is broken or user disconnected
         }
 
         return res.json({ success: true })

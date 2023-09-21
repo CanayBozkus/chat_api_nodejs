@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const redis = require('../redis')
 
-exports.socketConnectionHandler = (socket) => {
+exports.socketConnectionHandler = async (socket) => {
     const cookies = socket.request.headers.cookie
 
     if(!cookies){
@@ -30,5 +30,5 @@ exports.socketConnectionHandler = (socket) => {
     const client = redis.getClient()
 
     //set user socket session
-    client.set(userId, socketId)
+    await client.set(userId, socketId)
 }
