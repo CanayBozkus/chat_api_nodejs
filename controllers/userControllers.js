@@ -1,6 +1,7 @@
 const { validationResult } = require('express-validator')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt');
+const logger = require('../logger')
 
 const UserSchema = require('../models/userModel')
 
@@ -14,6 +15,7 @@ exports.login = async (req, res) => {
     }
 
     catch (err){
+        logger('login', err)
         return res.status(500).json({success: false, msg: "Please try again later"})
     }
 
@@ -62,6 +64,7 @@ exports.register = async (req, res) => {
     }
 
     catch (err){
+        logger('register', err)
         return res.status(500).json({success: false, msg: "Please try again later"})
     }
 
@@ -77,6 +80,7 @@ exports.register = async (req, res) => {
         const result = await user.save()
 
         if(Object.keys(result).length === 0){
+            logger('register', "Cannot save user")
             return res.status(500).json({success: false, msg: "Please try again later"})
         }
 
@@ -84,7 +88,7 @@ exports.register = async (req, res) => {
     }
 
     catch (e){
-        console.log(e)
+        logger('register', e)
         return res.status(500).json({success: false, msg: "Please try again later"})
     }
 }
@@ -94,6 +98,7 @@ exports.findCustomerSupportAgent = async (req, res) => {
         const agent = await UserSchema.findOne({isSupportAgent: true})
 
         if(!agent){
+            logger('register', "cannot find agent")
             return res.status(400).json({success: false, msg: "Please try again later"})
         }
 
@@ -101,7 +106,7 @@ exports.findCustomerSupportAgent = async (req, res) => {
     }
 
     catch (err){
-        console.log(err)
+        logger('register', err)
         return res.status(500).json({success: false, msg: "Please try again later"})
     }
 }

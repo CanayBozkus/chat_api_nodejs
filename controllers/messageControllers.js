@@ -1,6 +1,7 @@
 const MessageSchema = require('../models/messageModel')
 const redis = require('../redis')
 const socket = require('../socket')
+const logger = require('../logger')
 
 exports.sendMessage = async (req, res) => {
     const userId = req.userId
@@ -27,7 +28,7 @@ exports.sendMessage = async (req, res) => {
         const result = await message.save()
 
         if(Object.keys(result).length === 0){
-            console.log("Failed to save message")
+            logger("sendMessage", "Failed to save message")
             return res.status(500).json({ success: false, msg: "Please try again later"})
         }
 
@@ -54,7 +55,7 @@ exports.sendMessage = async (req, res) => {
     }
 
     catch (err) {
-        console.log(err)
+        logger("sendMessage", err)
         return res.status(500).json({success: false, msg: "Please try again later"})
     }
 }
@@ -68,11 +69,9 @@ exports.getMessages = async (req, res) => {
     }
 
     catch (err){
-        console.log(err)
+        logger("getMessages", err)
         return res.status(500).json({ success: false, msg: "Please try again later" })
     }
-
-    console.log(messages)
 
     return res.json({ success: true, data: messages})
 }

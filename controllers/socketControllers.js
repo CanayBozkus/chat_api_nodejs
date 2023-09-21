@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 const redis = require('../redis')
 const cookie = require('cookie');
+const logger = require('../logger')
 
 exports.socketConnectionHandler = async (socket) => {
     const cookies = cookie.parse(socket.request.headers.cookie)
@@ -22,6 +23,7 @@ exports.socketConnectionHandler = async (socket) => {
     }
 
     catch (e) {
+        logger("socketConnectionHandler", e)
         return socket.disconnect()
     }
 
@@ -32,6 +34,4 @@ exports.socketConnectionHandler = async (socket) => {
 
     //set user socket session
     await client.set(userId, socketId)
-
-    console.log('Connected', userId, socketId)
 }
