@@ -12,7 +12,7 @@ const MessageSchema = new Schema({
         required: true
     },
     message: {
-        type: Schema.ObjectId,
+        type: String,
         required: true
     }
 }, { timestamps: { createdAt: 'createdAt' } })

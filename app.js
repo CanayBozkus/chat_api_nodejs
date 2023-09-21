@@ -9,10 +9,12 @@ dotenv.config()
 const port = process.env.PORT ||  3000
 
 const userRoutes = require('./routes/userRoutes')
+const messageRoutes = require('./routes/messageRoutes')
 
 app.use(cookieParser())
 app.use(express.json())
 app.use(userRoutes)
+app.use(messageRoutes)
 
 
 
