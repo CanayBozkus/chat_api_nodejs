@@ -5,7 +5,8 @@ let io
 
 module.exports = {
     init: server => {
-        io = socket(server, { cors: { origin : "*"} })
+        io = socket(server, { cors: { origin : "*", credentials: true} })
+
     },
     getIO: () => {
         if(!io){

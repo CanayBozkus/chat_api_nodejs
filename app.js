@@ -15,7 +15,11 @@ const redis = require('./redis')
 
 const userRoutes = require('./routes/userRoutes')
 const messageRoutes = require('./routes/messageRoutes')
+const uiRoutes = require('./routes/uiRoutes')
 const {checkLogin} = require("./middlewares/userMiddlewares");
+
+app.set('views', __dirname + '/views');
+app.engine('html', require('ejs').renderFile);
 
 app.use(cors({
     origin: "*",
@@ -26,6 +30,7 @@ app.use(express.json())
 
 app.use(userRoutes)
 app.use(messageRoutes)
+app.use(uiRoutes)
 
 mongoose
     .connect(MONGODB_URL)

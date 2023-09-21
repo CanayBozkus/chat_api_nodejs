@@ -3,6 +3,7 @@ const { body } = require('express-validator')
 
 const controllers = require('../controllers/userControllers')
 const { checkValidationResult } = require('../middlewares/validationMiddlewares')
+const {checkLogin} = require("../middlewares/userMiddlewares");
 
 const router = express.Router()
 
@@ -21,5 +22,10 @@ router.post("/api/register",
     controllers.register
 )
 
+
+router.get('/api/find-customer-support-agent',
+    checkLogin,
+    controllers.findCustomerSupportAgent
+)
 
 module.exports = router

@@ -88,3 +88,20 @@ exports.register = async (req, res) => {
         return res.status(500).json({success: false, msg: "Please try again later"})
     }
 }
+
+exports.findCustomerSupportAgent = async (req, res) => {
+    try {
+        const agent = await UserSchema.findOne({isSupportAgent: true})
+
+        if(!agent){
+            return res.status(400).json({success: false, msg: "Please try again later"})
+        }
+
+        return res.json({success: true, agentId: agent.id})
+    }
+
+    catch (err){
+        console.log(err)
+        return res.status(500).json({success: false, msg: "Please try again later"})
+    }
+}

@@ -37,9 +37,9 @@ exports.sendMessage = async (req, res) => {
 
             //socket id of receiver
             const socketId = await client.get(to)
-
+            console.log('Sending to', socketId)
             io.to(socketId).emit('message', {
-                message,
+                message: messageText,
                 to,
                 from,
                 createdAt: message.createdAt
