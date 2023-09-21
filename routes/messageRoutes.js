@@ -16,5 +16,10 @@ router.post('/api/send-message',
     controllers.sendMessage
 )
 
+router.get('/api/get-messages',
+    checkLogin,
+    controllers.getMessages
+)
+
 
 module.exports = router

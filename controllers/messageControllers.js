@@ -37,3 +37,21 @@ exports.sendMessage = async (req, res) => {
         return res.status(500).json({success: false, msg: "Please try again later"})
     }
 }
+
+exports.getMessages = async (req, res) => {
+    const userId = req.userId
+    let messages
+
+    try {
+        messages = await MessageSchema.find({from: userId}).sort('createdAt')
+    }
+
+    catch (err){
+        console.log(err)
+        return res.status(500).json({ success: false, msg: "Please try again later" })
+    }
+
+    console.log(messages)
+
+    return res.json({ success: true, data: messages})
+}
