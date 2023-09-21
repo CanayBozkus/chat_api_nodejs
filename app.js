@@ -7,6 +7,7 @@ const app = express()
 dotenv.config()
 
 const port = process.env.PORT ||  3000
+const MONGODB_URL = `mongodb://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@${process.env.MONGODB_HOST}/${process.env.MONGODB_DB}?authSource=admin`
 
 const userRoutes = require('./routes/userRoutes')
 const messageRoutes = require('./routes/messageRoutes')
@@ -19,7 +20,7 @@ app.use(messageRoutes)
 
 
 mongoose
-    .connect(`mongodb+srv://${process.env.MONGODB_USERNAME}:${process.env.MONGODB_PASSWORD}@cluster0.vw09pqu.mongodb.net/?retryWrites=true&w=majority`)
+    .connect(MONGODB_URL)
     .then(result => {
         console.log("Mongodb connected")
         app.listen(port, () => {
