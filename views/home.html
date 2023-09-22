@@ -6,6 +6,9 @@
 </head>
 <body>
 
+<div>User Logged in: <span id="user">False</span></div>
+<div>Agent Found: <span id="agent">False</span></div>
+
 <div class="n_log_in">
     <input type="text" id="rName" placeholder="name..." /><br>
     <input type="text" id="rEmail" placeholder="email..." /><br>
@@ -65,6 +68,8 @@
 
         userId = response['userId']
 
+        document.getElementById('user').innerHTML = 'True'
+
         await connect()
     }
 
@@ -112,6 +117,8 @@
         }).then(response => response.json())
 
         agentId = response['agentId']
+
+        document.getElementById('agent').innerHTML = agentId ? 'True' : 'False'
     }
 
     async function sendMessage(){
